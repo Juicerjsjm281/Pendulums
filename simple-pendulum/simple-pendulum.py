@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 
-def runge_kutta_4(f, t, Y , dt): # h es el salto de paso
+def runge_kutta_4(f, t, Y , dt): # h is the step taken
     """To Use The Fourth-Order Runge-Kutta Method.
     
     Keyword arguments:
@@ -26,7 +26,7 @@ k_squared = g/l # 1/s^2 Angular frecuency
 h = 0.01
 
 # Initial conditions
-y0 = [np.pi / 2, 0]
+y0 = [np.pi / 4, 0]
 
 
 ###################
@@ -61,7 +61,7 @@ def aproximation_simple_pendulum_system(theta0, omega0):
 ####################
 
 # Initial configuration
-time_range = np.arange(0,3 + h, h)
+time_range = np.arange(0,8+ h, h)
 
 
 sol_fsps = np.zeros((len(time_range), len(y0)))
@@ -77,7 +77,7 @@ for i in range(len(time_range)-1):
 a, phi = aproximation_simple_pendulum_system(y0[0], y0[1])
 
 
-theta_fsps_sol = sol_fsps[:,0]
+theta_fsps_sol = sol_fsps[:,0] 
 omega_fsps_sol = sol_fsps[:,1]
 
 theta_asps_sol = a * np.cos(np.sqrt(k_squared) * time_range + phi)
@@ -87,9 +87,27 @@ omega_asps_sol = - a * np.sqrt(k_squared) * np.sin(np.sqrt(k_squared) * time_ran
 
 
 # Visual de la comparación entre fsps y asps
-simple_pendulum_figure, (ax1, ax2) = plt.subplots(1,2, figsize = (13,4.5))
+simple_pendulum_figure, axs = plt.subplots(2,2, figsize = (12,9))
 
-#First sublot (time vs theta)
+ax1 = axs[1,0]
+ax2 = axs[1,1]
+
+simple_pendulum_figure.delaxes(axs[0, 0])
+simple_pendulum_figure.delaxes(axs[0, 1])
+
+visual = simple_pendulum_figure.add_subplot(2, 1, 1)
+
+visual_fsps, = visual.plot([], [],'o-', label='fsps', color='red')
+visual_asps, = visual.plot([],[],'o-', label='asps',color = 'blue')
+visual.set_xlim(-l-0.5,l+0.5)
+visual.set_ylim(-l-0.5, l+ 0.5)
+visual.legend(loc = 'upper right')
+visual.set_aspect('equal', adjustable='box')
+visual.grid()
+visual.set_title('Pendulum simulation')
+
+
+#First subplot (time vs theta)
 ax1_fsps, = ax1.plot([], [], label='fsps',color = 'red')
 ax1_asps, = ax1.plot([], [], label = ' asps' , color = 'blue')
 ax1.set_xlim(time_range[0],time_range[-1])
@@ -98,6 +116,7 @@ ax1.set_xlabel(r"$t \ [s]$")
 ax1.set_ylabel(r"$\theta \ [rad]$")
 ax1.grid()
 ax1.legend(loc = 'upper right')
+ax1.set_title(r"$\theta (t)$")
 
 #Second subplot (phase diagram)
 ax2_fsps, = ax2.plot([], [], label='fsps',color = 'red')
@@ -107,6 +126,7 @@ ax2.set_ylim(np.min(omega_asps_sol) -0.5, np.max(omega_asps_sol) + 0.5)
 ax2.legend(loc = 'upper right')
 ax2.set_xlabel(r"$\theta \ [rad]$")
 ax2.set_ylabel(r"$\omega \ [\frac{rad}{s}]$")
+ax2.set_title(r"Diagram phase of $\theta $ and $ \omega$")
 
 
 #Section to define how the animation is gonna be
@@ -118,7 +138,10 @@ def init():
 
     ax2_fsps.set_data([],[])
     ax2_asps.set_data([],[])
-    return ax1_fsps, ax1_asps, ax2_fsps, ax2_asps
+
+    visual_fsps.set_data([],[])
+    visual_asps.set_data([],[])
+    return ax1_fsps, ax1_asps, ax2_fsps, ax2_asps, visual_fsps, visual_asps
 
 
 def animate(i):
@@ -126,9 +149,14 @@ def animate(i):
     ax1_fsps.set_data(time_range[:i+1], theta_fsps_sol[:i+1])
     ax1_asps.set_data(time_range[:i+1], theta_asps_sol[:i+1])
 
+
     ax2_fsps.set_data(theta_fsps_sol[:i+1], omega_fsps_sol[:i+1])
     ax2_asps.set_data(theta_asps_sol[:i+1], omega_asps_sol[:i+1])
-    return ax1_fsps, ax1_asps, ax2_fsps, ax2_asps
+
+
+    visual_fsps.set_data([0,l * np.sin(theta_fsps_sol[i])], [0,-l * np.cos(theta_fsps_sol[i])])
+    visual_asps.set_data([0,l * np.sin(theta_asps_sol[i])], [0,-l * np.cos(theta_asps_sol[i])])
+    return ax1_fsps, ax1_asps, ax2_fsps, ax2_asps, visual_fsps, visual_asps
 
 
 ani = animation.FuncAnimation(fig=simple_pendulum_figure, func= animate, init_func=init, frames = len(time_range), interval = h * 1000, blit = True)
