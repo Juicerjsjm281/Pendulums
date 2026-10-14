@@ -21,12 +21,13 @@ def runge_kutta_4(f, t, Y , dt): # h is the step taken
 
 # Parameters
 g = 9.81 # m/s^2 Gravity value
-l = 1 # m 
+l = 2 # m 
 k_squared = g/l # 1/s^2 Angular frecuency
 h = 0.01
+m = 1  #kilogras
 
 # Initial conditions
-y0 = [np.pi / 4, 0]
+y0 = [np.pi / 8,0]
 
 
 ###################
@@ -58,6 +59,8 @@ def aproximation_simple_pendulum_system(theta0, omega0):
 
 
 
+
+
 ####################
 
 # Initial configuration
@@ -79,9 +82,16 @@ a, phi = aproximation_simple_pendulum_system(y0[0], y0[1])
 
 theta_fsps_sol = sol_fsps[:,0] 
 omega_fsps_sol = sol_fsps[:,1]
+potential_energy_fsps =m * g * l *(1-np.cos( theta_fsps_sol))
+kinetic_energy_fsps = 0.5 * m * (l**2) *(omega_fsps_sol ** 2)
+total_energy_fsps = potential_energy_fsps + kinetic_energy_fsps
 
 theta_asps_sol = a * np.cos(np.sqrt(k_squared) * time_range + phi)
 omega_asps_sol = - a * np.sqrt(k_squared) * np.sin(np.sqrt(k_squared) * time_range + phi)
+potential_energy_asps =m * g * l *(1-np.cos( theta_asps_sol))
+kinetic_energy_asps = 0.5 * m * (l**2) *(omega_asps_sol ** 2)
+total_energy_asps = potential_energy_asps + kinetic_energy_asps
+
 
 
 
@@ -89,15 +99,15 @@ omega_asps_sol = - a * np.sqrt(k_squared) * np.sin(np.sqrt(k_squared) * time_ran
 # Visual de la comparación entre fsps y asps
 simple_pendulum_figure, axs = plt.subplots(2,2, figsize = (12,9), facecolor= '#0B0F19')
 
-#visual = axs[0,0]
-#energy = axs[0,1]
+visual = axs[0,0]
+energy = axs[0,1]
 ax1 = axs[1,0]
 ax2 = axs[1,1]
 
-simple_pendulum_figure.delaxes(axs[0, 0])
-simple_pendulum_figure.delaxes(axs[0, 1])
+#simple_pendulum_figure.delaxes(axs[0, 0])
+#simple_pendulum_figure.delaxes(axs[0, 1])
 
-visual = simple_pendulum_figure.add_subplot(2, 1, 1)
+#visual = simple_pendulum_figure.add_subplot(2, 1, 1)
 
 visual_fsps, = visual.plot([], [],'o-', label='fsps', color = '#E60033')
 visual_asps, = visual.plot([],[],'o-', label='asps',color = '#39C5BB')
@@ -119,13 +129,30 @@ for spine in visual.spines.values():
     spine.set_edgecolor('#374151')
 
 
+energy_fsps, = energy.plot([], [],'--', label='fsps', color = '#E60033')
+energy_asps, = energy.plot([],[],'--', label='asps',color = '#39C5BB')
+energy.set_xlim(time_range[0],time_range[-1]+0.5)
+energy.set_ylim(np.min(total_energy_asps) -0.5, np.max(total_energy_fsps)+0.5)
+energy.set_xlabel(r"$t \ [s]$")
+energy.set_ylabel(r"$E \ [J]$")
+energy.xaxis.label.set_color('#E5E7EB')
+energy.yaxis.label.set_color('#E5E7EB')
+energy.tick_params(colors='#9CA3AF', labelsize=10)
+energy.set_facecolor('#111827')
+legend_energy = energy.legend(loc = 'upper right', frameon = False)
+for text in legend_energy.get_texts():
+    text.set_color('#FFFFFF')
+energy.grid(color = '#374151')
+energy.set_title('Total Energy', color= '#FFFFFF')
+for spine in energy.spines.values():
+    spine.set_edgecolor('#374151')
 
 
 
 #First subplot (time vs theta)
 ax1_fsps, = ax1.plot([], [], label='fsps',color = '#E60033', alpha=0.7)
 ax1_asps, = ax1.plot([], [], label = ' asps' , color = '#39C5BB', alpha = 0.7)
-ax1.set_xlim(time_range[0],time_range[-1])
+ax1.set_xlim(time_range[0],time_range[-1]+0.5)
 ax1.set_ylim(np.min(theta_fsps_sol) - 0.5, np.max(theta_fsps_sol) + 0.5)
 ax1.set_xlabel(r"$t \ [s]$")
 ax1.set_ylabel(r"$\theta \ [rad]$")
@@ -144,7 +171,7 @@ for spine in ax1.spines.values():
 #Second subplot (phase diagram)
 ax2_fsps, = ax2.plot([], [], label='fsps',color = '#E60033')
 ax2_asps, = ax2.plot([], [], label = ' asps' , color = '#39C5BB')
-ax2.set_xlim(np.min(theta_fsps_sol) -0.5, np.max(theta_fsps_sol) + 0.5)
+ax2.set_xlim(np.min(theta_fsps_sol) -0.2, np.max(theta_fsps_sol) + 0.2)
 ax2.set_ylim(np.min(omega_asps_sol) -0.5, np.max(omega_asps_sol) + 0.5)
 ax2.set_xlabel(r"$\theta \ [rad]$")
 ax2.set_ylabel(r"$\omega \ [\frac{rad}{s}]$")
@@ -173,7 +200,10 @@ def init():
 
     visual_fsps.set_data([],[])
     visual_asps.set_data([],[])
-    return ax1_fsps, ax1_asps, ax2_fsps, ax2_asps, visual_fsps, visual_asps
+
+    energy_fsps.set_data([],[])
+    energy_asps.set_data([],[])
+    return ax1_fsps, ax1_asps, ax2_fsps, ax2_asps, visual_fsps, visual_asps, energy_fsps, energy_asps
 
 
 def animate(i):
@@ -188,7 +218,10 @@ def animate(i):
 
     visual_fsps.set_data([0,l * np.sin(theta_fsps_sol[i])], [0,-l * np.cos(theta_fsps_sol[i])])
     visual_asps.set_data([0,l * np.sin(theta_asps_sol[i])], [0,-l * np.cos(theta_asps_sol[i])])
-    return ax1_fsps, ax1_asps, ax2_fsps, ax2_asps, visual_fsps, visual_asps
+
+    energy_fsps.set_data(time_range[:i],total_energy_fsps[:i])
+    energy_asps.set_data(time_range[:i],total_energy_asps[:i])
+    return ax1_fsps, ax1_asps, ax2_fsps, ax2_asps, visual_fsps, visual_asps, energy_fsps, energy_asps
 
 
 ani = animation.FuncAnimation(fig=simple_pendulum_figure, func= animate, init_func=init, frames = len(time_range), interval = h * 1000, blit = True)
