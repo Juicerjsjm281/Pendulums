@@ -87,8 +87,10 @@ omega_asps_sol = - a * np.sqrt(k_squared) * np.sin(np.sqrt(k_squared) * time_ran
 
 
 # Visual de la comparación entre fsps y asps
-simple_pendulum_figure, axs = plt.subplots(2,2, figsize = (12,9))
+simple_pendulum_figure, axs = plt.subplots(2,2, figsize = (12,9), facecolor= '#0B0F19')
 
+#visual = axs[0,0]
+#energy = axs[0,1]
 ax1 = axs[1,0]
 ax2 = axs[1,1]
 
@@ -97,36 +99,66 @@ simple_pendulum_figure.delaxes(axs[0, 1])
 
 visual = simple_pendulum_figure.add_subplot(2, 1, 1)
 
-visual_fsps, = visual.plot([], [],'o-', label='fsps', color='red')
-visual_asps, = visual.plot([],[],'o-', label='asps',color = 'blue')
+visual_fsps, = visual.plot([], [],'o-', label='fsps', color = '#E60033')
+visual_asps, = visual.plot([],[],'o-', label='asps',color = '#39C5BB')
 visual.set_xlim(-l-0.5,l+0.5)
 visual.set_ylim(-l-0.5, l+ 0.5)
-visual.legend(loc = 'upper right')
+visual.set_xlabel(r"$x \ [m]$")
+visual.set_ylabel(r"$y \ [m]$")
+visual.xaxis.label.set_color('#E5E7EB')
+visual.yaxis.label.set_color('#E5E7EB')
 visual.set_aspect('equal', adjustable='box')
-visual.grid()
-visual.set_title('Pendulum simulation')
+visual.tick_params(colors='#9CA3AF', labelsize=10)
+visual.set_facecolor('#111827')
+legend_visual = visual.legend(loc = 'upper right', frameon = False)
+for text in legend_visual.get_texts():
+    text.set_color('#FFFFFF')
+visual.grid(color = '#374151')
+visual.set_title('Pendulum simulation', color= '#FFFFFF')
+for spine in visual.spines.values():
+    spine.set_edgecolor('#374151')
+
+
+
 
 
 #First subplot (time vs theta)
-ax1_fsps, = ax1.plot([], [], label='fsps',color = 'red')
-ax1_asps, = ax1.plot([], [], label = ' asps' , color = 'blue')
+ax1_fsps, = ax1.plot([], [], label='fsps',color = '#E60033', alpha=0.7)
+ax1_asps, = ax1.plot([], [], label = ' asps' , color = '#39C5BB', alpha = 0.7)
 ax1.set_xlim(time_range[0],time_range[-1])
 ax1.set_ylim(np.min(theta_fsps_sol) - 0.5, np.max(theta_fsps_sol) + 0.5)
 ax1.set_xlabel(r"$t \ [s]$")
 ax1.set_ylabel(r"$\theta \ [rad]$")
-ax1.grid()
-ax1.legend(loc = 'upper right')
-ax1.set_title(r"$\theta (t)$")
+ax1.xaxis.label.set_color('#E5E7EB')
+ax1.yaxis.label.set_color('#E5E7EB')
+ax1.tick_params(colors='#9CA3AF', labelsize=10)
+ax1.grid(color = '#374151')
+ax1.set_facecolor('#111827')
+legend1 = ax1.legend(loc = 'upper right', frameon = False)
+for text in legend1.get_texts():
+    text.set_color('#FFFFFF')
+ax1.set_title(r"$\theta (t)$", color= '#FFFFFF')
+for spine in ax1.spines.values():
+    spine.set_edgecolor('#374151')
 
 #Second subplot (phase diagram)
-ax2_fsps, = ax2.plot([], [], label='fsps',color = 'red')
-ax2_asps, = ax2.plot([], [], label = ' asps' , color = 'blue')
+ax2_fsps, = ax2.plot([], [], label='fsps',color = '#E60033')
+ax2_asps, = ax2.plot([], [], label = ' asps' , color = '#39C5BB')
 ax2.set_xlim(np.min(theta_fsps_sol) -0.5, np.max(theta_fsps_sol) + 0.5)
 ax2.set_ylim(np.min(omega_asps_sol) -0.5, np.max(omega_asps_sol) + 0.5)
-ax2.legend(loc = 'upper right')
 ax2.set_xlabel(r"$\theta \ [rad]$")
 ax2.set_ylabel(r"$\omega \ [\frac{rad}{s}]$")
-ax2.set_title(r"Diagram phase of $\theta $ and $ \omega$")
+ax2.xaxis.label.set_color('#E5E7EB')
+ax2.yaxis.label.set_color('#E5E7EB')
+ax2.tick_params(colors='#9CA3AF', labelsize=10)
+ax2.grid(color = '#374151')
+ax2.set_facecolor('#111827')
+legend2 = ax2.legend(loc = 'upper right', frameon = False)
+for text in legend2.get_texts():
+    text.set_color('#FFFFFF')
+ax2.set_title(r"Diagram phase of $\theta $ and $ \omega$", color= '#FFFFFF')
+for spine in ax2.spines.values():
+    spine.set_edgecolor('#374151')
 
 
 #Section to define how the animation is gonna be

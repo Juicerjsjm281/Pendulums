@@ -1,6 +1,6 @@
 # Pendulums: Simulating a lot of Pendulums
 
-Numerical simulation of a double pendulum in Python using a 4th-order Runge-Kutta integrator.
+Simulation of a lot of pendulums in Python with different methods.
 
 
 ## Method

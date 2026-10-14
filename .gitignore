@@ -186,3 +186,6 @@ cython_debug/
 # Resultados de simulación / imágenes exportadas
 *.png
 *.svg
+
+#tempCodeRunnerFile
+tempCodeRunnerFile.*
