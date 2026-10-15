@@ -82,13 +82,13 @@ a, phi = aproximation_simple_pendulum_system(y0[0], y0[1])
 
 theta_fsps_sol = sol_fsps[:,0] 
 omega_fsps_sol = sol_fsps[:,1]
-potential_energy_fsps =m * g * l *(1-np.cos( theta_fsps_sol))
+potential_energy_fsps = -m * g * l *np.cos( theta_fsps_sol)
 kinetic_energy_fsps = 0.5 * m * (l**2) *(omega_fsps_sol ** 2)
 total_energy_fsps = potential_energy_fsps + kinetic_energy_fsps
 
 theta_asps_sol = a * np.cos(np.sqrt(k_squared) * time_range + phi)
 omega_asps_sol = - a * np.sqrt(k_squared) * np.sin(np.sqrt(k_squared) * time_range + phi)
-potential_energy_asps =m * g * l *(1-np.cos( theta_asps_sol))
+potential_energy_asps = - m * g * l * np.cos( theta_asps_sol)
 kinetic_energy_asps = 0.5 * m * (l**2) *(omega_asps_sol ** 2)
 total_energy_asps = potential_energy_asps + kinetic_energy_asps
 
@@ -96,18 +96,13 @@ total_energy_asps = potential_energy_asps + kinetic_energy_asps
 
 
 
-# Visual de la comparación entre fsps y asps
+# Visual comparation between fsps and asps
 simple_pendulum_figure, axs = plt.subplots(2,2, figsize = (12,9), facecolor= '#0B0F19')
 
 visual = axs[0,0]
 energy = axs[0,1]
 ax1 = axs[1,0]
 ax2 = axs[1,1]
-
-#simple_pendulum_figure.delaxes(axs[0, 0])
-#simple_pendulum_figure.delaxes(axs[0, 1])
-
-#visual = simple_pendulum_figure.add_subplot(2, 1, 1)
 
 visual_fsps, = visual.plot([], [],'o-', label='fsps', color = '#E60033')
 visual_asps, = visual.plot([],[],'o-', label='asps',color = '#39C5BB')
@@ -219,14 +214,13 @@ def animate(i):
     visual_fsps.set_data([0,l * np.sin(theta_fsps_sol[i])], [0,-l * np.cos(theta_fsps_sol[i])])
     visual_asps.set_data([0,l * np.sin(theta_asps_sol[i])], [0,-l * np.cos(theta_asps_sol[i])])
 
-    energy_fsps.set_data(time_range[:i],total_energy_fsps[:i])
-    energy_asps.set_data(time_range[:i],total_energy_asps[:i])
+    energy_fsps.set_data(time_range[:i+1],total_energy_fsps[:i+1])
+    energy_asps.set_data(time_range[:i+1],total_energy_asps[:i+1])
     return ax1_fsps, ax1_asps, ax2_fsps, ax2_asps, visual_fsps, visual_asps, energy_fsps, energy_asps
 
 
 ani = animation.FuncAnimation(fig=simple_pendulum_figure, func= animate, init_func=init, frames = len(time_range), interval = h * 1000, blit = True)
 
-# ani.save('pendulum_animation.gif', writer='pillow', fps=int(len(time_range)/(3+h)))
 
 plt.tight_layout()
 plt.show()
