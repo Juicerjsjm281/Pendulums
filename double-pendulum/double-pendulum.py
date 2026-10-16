@@ -140,7 +140,7 @@ legend_energy_t= energy_t.legend(loc = 'upper right', frameon = False)
 for text in legend_energy_t.get_texts():
     text.set_color('#FFFFFF')
 energy_t.grid(color = '#374151')
-energy_t.set_title('Double Pendulum Energy', color= '#FFFFFF')
+energy_t.set_title('Double-Pendulum Energy', color= '#FFFFFF')
 for spine in energy_t.spines.values():
     spine.set_edgecolor('#374151')
 

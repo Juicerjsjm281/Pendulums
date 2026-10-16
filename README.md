@@ -1,10 +1,10 @@
-# Pendulums: Simulating a lot of Pendulums
+# Simultaing a lot of physics problems.
 
-Simulation of a lot of pendulums in Python with different methods.
+Practing a lot of simulation physics problems.
 
 
 ## Method
-- Equations of motion derived using Lagrangian mechanics
+- It will be explained in futures README.md for each physics problem.
 
 
 ## Getting Started
@@ -15,7 +15,7 @@ pip install -r requirements.txt
 
 
 ## Built With
-Python, NumPy, SciPy, Matplotlib
+Python, NumPy, Matplotlib
 
 ## Author
 Andrés Abel Cosio Tello | Physics Graduate
