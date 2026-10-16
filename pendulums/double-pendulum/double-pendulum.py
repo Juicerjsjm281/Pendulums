@@ -219,7 +219,7 @@ def animate(i):
     te_pendulum.set_data(time_range[:i+1], te_t[:i+1])
     return visual_pendulum_1, visual_pendulum_2, ke_pendulum_1, pe_pendulum_1, te_pendulum_1, ke_pendulum_2, pe_pendulum_2, te_pendulum_2, te_pendulum, te_m1, te_m2
 
-ani = animation.FuncAnimation(fig=double_pendulum_figure, func= animate, init_func=init, frames = range(0, len(time_range), 5), interval = h * 5 * 1000, blit = False)
+anim = animation.FuncAnimation(fig=double_pendulum_figure, func= animate, init_func=init, frames = range(0, len(time_range), 5), interval = h * 5 * 1000, blit = False)
 
 
 plt.tight_layout()
